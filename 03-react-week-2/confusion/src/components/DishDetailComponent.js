@@ -21,7 +21,7 @@ const RenderDish = ({ dish }) => {
 
 
 
-const RenderDishDetail = ({ dish }) => {
+const DishDetail = ({ dish }) => {
     if (dish) {
         return (
             <div className="container">
@@ -73,4 +73,4 @@ const RenderComments = ({ comments }) => {
     }
 }
 
-export default RenderDishDetail;
+export default DishDetail;
