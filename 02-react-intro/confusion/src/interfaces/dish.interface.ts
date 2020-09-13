@@ -6,4 +6,10 @@ export interface Dish {
     price: string;
     description: string;
     image: string;
+    comments?: {
+        id: number;
+        author: string;
+        date: string;
+        content: string;
+    }[] | null;
 }
