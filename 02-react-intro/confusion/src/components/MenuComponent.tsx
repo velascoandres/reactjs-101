@@ -1,48 +1,67 @@
 import React, { Component } from 'react';
 import { Media } from 'reactstrap';
-import { DISHES } from '../constants/dishes';
 import { Dish } from '../interfaces/dish.interface';
+import { Card, CardImg, CardImgOverlay, CardText, CardBody, CardTitle } from 'reactstrap';
 
 class Menu extends Component {
-
-    state: { dishes: Dish[] };
-
-    constructor(props: any) {
+    state: any;
+    constructor(
+        public props: { dishes: Dish[] }
+    ) {
         super(props);
         this.state = {
-            dishes: [
-                ...DISHES,
-            ],
+            selectedDish: null,
         };
+        console.log('Menu component constr');
+    }
+
+    componentDidMount() {
+        console.log('Component Did mount');
+    }
+
+    onDishSelect(dish: Dish) {
+        this.setState(
+            {
+                selectedDish: dish,
+            }
+        );
+    }
+
+
+    renderDish(dish: Dish) {
+        if (dish !== null) {
+            return (
+                <Card>
+                    <CardImg width="100%" src={dish.image} alt={dish.name}></CardImg>
+                    <CardBody>
+                        <CardTitle>
+                            {dish.name}
+                        </CardTitle>
+                        <CardText>
+                            {dish.description}
+                        </CardText>
+                    </CardBody>
+                </Card>
+            );
+        } else {
+            return (<div></div>)
+        }
     }
 
     render() {
-        const menu = this.state.dishes.map(
+        console.log('rendering..');
+        const menu = this.props.dishes.map(
             (dish: Dish) => {
                 return (
-                    <div key={dish.id} className="col-12 mt-5">
-                        <Media tag="li">
-                            <Media left middle>
-                                <Media
-                                    object
-                                    src={dish.image}
-                                    alt={dish.name}
-                                >
-                                </Media>
-                            </Media>
-                            <Media
-                                body
-                                className="ml-5"
-                            >
-                                <Media heading>
-                                    {dish.name}
-                                </Media>
-                                <p>
-                                    {dish.description}
-                                </p>
-                            </Media>
-                        </Media>
+                    <div key={dish.id} className="col-12 col-md-5 m-1">
+                        <Card onClick={() => this.onDishSelect(dish)} >
+                            <CardImg width="100%" src={dish.image} alt={dish.name}></CardImg>
+                            <CardImgOverlay>
+                                <CardTitle> {dish.name} </CardTitle>
+                            </CardImgOverlay>
+                        </Card>
                     </div>
+
                 );
             }
         );
@@ -50,9 +69,10 @@ class Menu extends Component {
         return (
             <div className="container">
                 <div className="row">
-                    <Media list>
-                        {menu}
-                    </Media>
+                    {menu}
+                </div>
+                <div className="row">
+                    {this.renderDish(this.state.selectedDish)}
                 </div>
             </div>
         );
