@@ -1,9 +1,9 @@
 import React from 'react';
 import { Card, CardImg, CardBody, CardText, CardTitle } from 'reactstrap';
+import { Dish } from '../interfaces/dish.interface';
 
 
-
-const RenderDish = ({ dish }) => {
+const RenderDish = ({ dish }: { dish: Dish }) => {
     return (
         <Card>
             <CardImg width="100%" src={dish.image} alt={dish.name}></CardImg>
@@ -17,11 +17,13 @@ const RenderDish = ({ dish }) => {
             </CardBody>
         </Card>
     );
-}
+};
 
+interface IDishDetail {
+    dish: Dish;
+};
 
-
-const DishDetail = ({ dish }) => {
+const DishDetail = ({ dish }: IDishDetail) => {
     if (dish) {
         return (
             <div className="container">
@@ -39,23 +41,25 @@ const DishDetail = ({ dish }) => {
             </div>
         );
     } else {
-        return (<div></div>)
+        return (<div></div>);
     }
-}
+};
 
-function buildDate(date) {
+
+function buildDate(date: string) {
     return new Intl
         .DateTimeFormat('en-US', { year: 'numeric', month: 'short', day: '2-digit' })
         .format(
-            new Date(Date.parse(date))
+            new Date(Date.parse(date)),
         );
 }
 
-const RenderComments = ({ comments }) => {
+
+const RenderComments = ({ comments }: any) => {
     const hasComments = comments !== null;
     if (hasComments) {
         return comments.map(
-            (comment) => {
+            (comment: any) => {
                 return (
                     <li key={comment.id} className="list-unstyled">
                         <p>
@@ -66,11 +70,11 @@ const RenderComments = ({ comments }) => {
                         </p>
                     </li>
                 );
-            }
+            },
         );
     } else {
         return (<div></div>);
     }
-}
+};
 
 export default DishDetail;

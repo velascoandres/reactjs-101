@@ -1,28 +1,29 @@
 {
-  "name": "confusion",
+  "name": "confusion-ts",
   "version": "0.1.0",
   "private": true,
   "dependencies": {
     "@testing-library/jest-dom": "^4.2.4",
     "@testing-library/react": "^9.5.0",
     "@testing-library/user-event": "^7.2.1",
-    "bootstrap": "^4.5.2",
-    "bootstrap-social": "^5.1.1",
-    "create-react-class": "^15.6.3",
-    "font-awesome": "^4.7.0",
+    "@types/jest": "^24.9.1",
+    "@types/node": "^12.12.58",
+    "@types/react": "^16.9.49",
+    "@types/react-dom": "^16.9.8",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-scripts": "3.4.3",
     "reactstrap": "^8.5.1",
-    "typescript": "^4.0.2"
+    "typescript": "^4.0.2",
+    "bootstrap": "^4.5.2",
+    "bootstrap-social": "^5.1.1",
+    "font-awesome": "^4.7.0"
   },
   "scripts": {
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
-    "eject": "react-scripts eject",
-    "lint": "eslint src/**/*.js src/**/*.js",
-    "fix-lint": "eslint src/**/*.js src/**/*.js --fix"
+    "eject": "react-scripts eject"
   },
   "eslintConfig": {
     "extends": "react-app"
@@ -40,9 +41,6 @@
     ]
   },
   "devDependencies": {
-    "@types/reactstrap": "^8.5.1",
-    "eslint": "^7.9.0",
-    "eslint-config-google": "^0.14.0",
-    "eslint-plugin-react": "^7.20.6"
+    "@types/reactstrap": "^8.5.1"
   }
 }
