@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import { Navbar, NavbarBrand } from 'reactstrap';
 import { DISHES } from '../shared/dishes';
 import Menu from './MenuComponent';
 import DishDetail from './DishDetailComponent';
 import { Dish } from '../interfaces/dish.interface';
+import Header from './HeaderComponent';
+import Footer from './FooterComponent';
 
-export class Main extends Component {
-  state: { dishes: Dish[]; selectedDish?: number | null };
+interface IMainState {
+  dishes: Dish[];
+  selectedDish: number | string | null;
+}
 
-  constructor(props: any) {
+class Main extends Component<{}, IMainState> {
+  constructor(props: Object) {
     super(props);
     this.state = {
       dishes: DISHES,
@@ -16,31 +20,28 @@ export class Main extends Component {
     };
   }
 
-  onDishSelect(dishId: number | string) {
+  onDishSelect(dishId: number | string): void {
     this.setState({
       selectedDish: dishId,
     });
   }
 
   get selectedDish(): Dish {
-    return this.state.dishes.filter(
-      (dish: Dish) => dish.id === this.state.selectedDish,
-    )[0];
+    const { dishes, selectedDish } = this.state;
+    return dishes.filter((dish: Dish) => dish.id === selectedDish)[0];
   }
 
-  render() {
+  render(): JSX.Element {
+    const { dishes } = this.state;
     return (
       <div className="App">
-        <Navbar dark color="primary">
-          <div className="container">
-            <NavbarBrand href="/">Ristorante Confusion</NavbarBrand>
-          </div>
-        </Navbar>
+        <Header />
         <Menu
-          dishes={this.state.dishes}
+          dishes={dishes}
           onClick={(dishId: number) => this.onDishSelect(dishId)}
         />
         <DishDetail dish={this.selectedDish as Dish} />
+        <Footer />
       </div>
     );
   }

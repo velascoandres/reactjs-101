@@ -1,3 +1,10 @@
+export interface IComment {
+  id: number;
+  author: string;
+  date: string;
+  content: string;
+}
+
 export interface Dish {
   id: number;
   name: string;
@@ -6,12 +13,5 @@ export interface Dish {
   price: string;
   description: string;
   image: string;
-  comments?:
-    | {
-        id: number;
-        author: string;
-        date: string;
-        content: string;
-      }[]
-    | null;
+  comments?: IComment[] | null;
 }

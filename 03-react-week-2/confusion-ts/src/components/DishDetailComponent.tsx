@@ -1,10 +1,12 @@
 import React from 'react';
-import {
-  Card, CardImg, CardBody, CardText, CardTitle,
-} from 'reactstrap';
-import { Dish } from '../interfaces/dish.interface';
+import { Card, CardImg, CardBody, CardText, CardTitle } from 'reactstrap';
+import { Dish, IComment } from '../interfaces/dish.interface';
 
-const RenderDish = ({ dish }: { dish: Dish }) => {
+interface IRenderDish {
+  dish: Dish;
+}
+
+const RenderDish = ({ dish }: IRenderDish) => {
   return (
     <Card>
       <CardImg width="100%" src={dish.image} alt={dish.name} />
@@ -20,7 +22,7 @@ interface IDishDetail {
   dish: Dish;
 }
 
-const DishDetail = ({ dish }: IDishDetail) => {
+const DishDetail = ({ dish }: IDishDetail): JSX.Element => {
   if (dish) {
     return (
       <div className="container">
@@ -30,9 +32,7 @@ const DishDetail = ({ dish }: IDishDetail) => {
           </div>
           <div className="col-12 col-md-5 m-1">
             <h4>Comments</h4>
-            <ul>
-              <RenderComments comments={dish.comments} />
-            </ul>
+            <RenderComments comments={dish.comments as IComment[]} />
           </div>
         </div>
       </div>
@@ -41,7 +41,7 @@ const DishDetail = ({ dish }: IDishDetail) => {
   return <div />;
 };
 
-function buildDate(date: string) {
+function buildDate(date: string): string {
   return new Intl.DateTimeFormat('en-US', {
     year: 'numeric',
     month: 'short',
@@ -49,22 +49,25 @@ function buildDate(date: string) {
   }).format(new Date(Date.parse(date)));
 }
 
-const RenderComments = ({ comments }: any) => {
-  const hasComments = comments !== null;
+interface IRenderComments {
+  comments: IComment[];
+}
+
+const RenderComments = ({ comments }: IRenderComments): JSX.Element => {
+  const hasComments = comments !== null && comments instanceof Array;
   if (hasComments) {
-    return comments.map((comment: any) => (
-      <li key={comment.id} className="list-unstyled">
-        <p>{comment.content}</p>
-        <p>
-          --
-          {' '}
-          {comment.author}
-          ,
-          {' '}
-          {buildDate(comment.date)}
-        </p>
-      </li>
-    ));
+    return (
+      <ul>
+        {(comments as IComment[]).map((comment: IComment) => (
+          <li key={comment.id} className="list-unstyled">
+            <p>{comment.content}</p>
+            <p>
+              -- {comment.author}, {buildDate(comment.date)}
+            </p>
+          </li>
+        ))}
+      </ul>
+    );
   }
   return <div />;
 };

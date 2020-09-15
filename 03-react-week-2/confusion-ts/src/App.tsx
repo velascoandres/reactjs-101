@@ -1,8 +1,8 @@
-import React from "react";
-import "./App.css";
-import Main from "./components/MainComponent";
+import React from 'react';
+import './App.css';
+import Main from './components/MainComponent';
 
-function App() {
+function App(): JSX.Element {
   return (
     <div>
       <Main />
