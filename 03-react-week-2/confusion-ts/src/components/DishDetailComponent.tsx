@@ -1,6 +1,8 @@
 import React from 'react';
-import { Card, CardImg, CardBody, CardText, CardTitle } from 'reactstrap';
+import { Card, CardImg, CardBody, CardText, CardTitle, Breadcrumb, BreadcrumbItem } from 'reactstrap';
 import { Dish, IComment } from '../interfaces/dish.interface';
+import { Link } from 'react-router-dom';
+
 
 interface IRenderDish {
   dish: Dish;
@@ -20,19 +22,34 @@ const RenderDish = ({ dish }: IRenderDish) => {
 
 interface IDishDetail {
   dish: Dish;
+  comments: IComment[];
 }
 
-const DishDetail = ({ dish }: IDishDetail): JSX.Element => {
+const DishDetail = ({ dish, comments }: IDishDetail): JSX.Element => {
   if (dish) {
     return (
       <div className="container">
+        <Breadcrumb>
+          <BreadcrumbItem>
+            <Link to="/home"> Home</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem>
+            <Link to="/menu"> Menu</Link>
+          </BreadcrumbItem>
+          <BreadcrumbItem active>
+            {dish.name}
+          </BreadcrumbItem>
+        </Breadcrumb>
         <div className="row">
+          <div className="col-12">
+            <h3>Menu</h3>
+          </div>
           <div className="col-12 col-md-5 m-1">
             <RenderDish dish={dish} />
           </div>
           <div className="col-12 col-md-5 m-1">
             <h4>Comments</h4>
-            <RenderComments comments={dish.comments as IComment[]} />
+            <RenderComments comments={comments} />
           </div>
         </div>
       </div>
