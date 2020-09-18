@@ -46,14 +46,14 @@ class Header extends Component<{}, IHeaderState> {
               <Nav navbar>
 
                 <NavItem>
-                  <NavLink className="nav-link" to="/aboutus" >
-                    <span className="fa fa-info fa-lg"></span> About US
+                  <NavLink className="nav-link" to="/home">
+                    <span className="fa fa-home fa-lg"></span> Home
                   </NavLink>
                 </NavItem>
 
                 <NavItem>
-                  <NavLink className="nav-link" to="/home">
-                    <span className="fa fa-home fa-lg"></span> Home
+                  <NavLink className="nav-link" to="/aboutus" >
+                    <span className="fa fa-info fa-lg"></span> About US
                   </NavLink>
                 </NavItem>
 

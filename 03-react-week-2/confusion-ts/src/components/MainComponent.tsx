@@ -11,6 +11,7 @@ import { LEADERS } from '../shared/leaders';
 import { PROMOTIONS } from '../shared/promotions';
 import DishDetail from './DishDetailComponent';
 import { COMMENTS } from '../shared/comments';
+import About from './AboutComponent';
 
 
 interface IMainState {
@@ -73,7 +74,7 @@ class Main extends Component<{}, IMainState> {
 
 
   render(): JSX.Element {
-    const { dishes } = this.state;
+    const { dishes, leaders } = this.state;
 
     const HomePage = () => (
       <Home
@@ -98,6 +99,7 @@ class Main extends Component<{}, IMainState> {
           <Route exact path="/menu" component={() => (<Menu dishes={dishes} />)} />
           <Route path="/menu/:dishId" component={DishWithId} />
           <Route exact path="/contactus" component={() => <Contact />} />
+          <Route exact path="/aboutus" component={() => <About leaders={leaders} />} />
           <Route path="/home" />
         </Switch>
         <Footer />
