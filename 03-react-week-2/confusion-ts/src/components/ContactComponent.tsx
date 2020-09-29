@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Label } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Label, FormFeedback, Alert } from 'reactstrap';
 import { Link } from 'react-router-dom';
 import { type } from 'os';
+import { IValidationResponse, ValidationTypes, ValidatorFunction, Validators } from '../functions/validate-field';
+import { access } from 'fs';
 
 
 
-interface IContactState {
+interface IContactForm {
     firstName: string;
     lastName: string;
     telNum: string;
@@ -15,8 +17,55 @@ interface IContactState {
     message: string;
 }
 
+interface IContactState extends IContactForm {
+    touched: any;
+}
+
+interface IErrors {
+    minLenght?: string;
+    maxLenght?: string;
+    required?: string;
+}
+
 
 class Contact extends Component<{}, IContactState> {
+
+    errors: Record<keyof IContactForm, IErrors> = {
+        firstName: {
+            minLenght: 'First Name should be >>= 3 characters',
+        },
+        lastName: {
+            minLenght: 'Last Name should be >>= 3 characters',
+        },
+        contactType: {
+            required: '',
+        },
+        email: {
+            required: 'The email is mandatory',
+        },
+        agree: {
+            required: '',
+        },
+        message: {
+            required: '',
+        },
+        telNum: {
+            required: '',
+            maxLenght: 'Tel. Num should be <= 10 characters',
+            minLenght: 'Tel. Num should be >>= 3 characters',
+        }
+    }
+
+    errorMessages: Record<keyof IContactForm, string[]> = {
+        firstName: [],
+        lastName: [],
+        telNum: [],
+        email: [],
+        agree: [],
+        contactType: [],
+        message: [],
+    }
+
 
     constructor(props: any) {
         super(props);
@@ -26,11 +75,53 @@ class Contact extends Component<{}, IContactState> {
             telNum: '',
             email: '',
             agree: false,
-            contactType: '',
+            contactType: 'Tel.',
             message: '',
+            touched: {
+                firstName: false,
+                lastName: false,
+                telNum: false,
+                email: false,
+                agree: false,
+                contactType: false,
+                message: false,
+            }
         };
         this.handleSubmit = this.handleSubmit.bind(this);
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleBlur = this.handleBlur.bind(this);
+    }
+
+    handleBlur(field: string) {
+        return (event: any) => {
+            this.setState(
+                {
+                    touched: {
+                        ...this.state.touched,
+                        [field]: true,
+                    },
+                },
+            );
+        };
+    }
+
+
+    validate(fieldName: keyof IContactForm, value: string, validatorFunctions: ValidatorFunction[]): string[] | undefined {
+        console.log(this.state.touched[fieldName]);
+        if (this.state.touched[fieldName]) {
+            const fieldErrros: Partial<Record<ValidationTypes, string>> = this.errors[fieldName];
+            return validatorFunctions.reduce(
+                (acc: string[], func: ValidatorFunction) => {
+                    const validaationResponse = func(value);
+                    console.log(validaationResponse);
+                    if (validaationResponse) {
+                        const errorName = Object.keys(validaationResponse)[0] as ValidationTypes;
+                        acc.push(fieldErrros[errorName] as string);
+                    }
+                    return acc;
+                }, []
+            );
+        }
     }
 
     handleInputChange(event: any) {
@@ -50,7 +141,26 @@ class Contact extends Component<{}, IContactState> {
         alert('Current state is ' + JSON.stringify(this.state));
     }
 
+    renderErrors(errors: string[] | undefined) {
+        if (errors && errors.length > 0) {
+            return (
+                <Alert color="danger">
+                    {errors.map((err, index) => <span key={index+err}>{err}</span>)}
+                </Alert>
+            )
+        } else {
+            return (<div></div>)
+        }
+    }
+
     render() {
+        const errors: Partial<Record<keyof IContactForm, string[] | undefined>> = {
+            firstName: this.validate('firstName', this.state.firstName, [Validators.minLength(3)]),
+            lastName: this.validate('lastName', this.state.lastName, [Validators.minLength(3)]),
+            email: this.validate('email', this.state.email, [Validators.required]),
+            telNum: this.validate('telNum', this.state.telNum, [Validators.maxLength(10), Validators.minLength(3)]),
+        };
+        console.log('errors', errors);
         return (
             <div className="container">
                 <Breadcrumb>
@@ -102,8 +212,11 @@ class Contact extends Component<{}, IContactState> {
                                         name="firstName"
                                         placeholder="First Name"
                                         value={this.state.firstName}
+                                        onBlur={this.handleBlur('firstName')}
                                         onChange={this.handleInputChange}
+                                        valid={errors.firstName && errors.firstName.length === 0}
                                     />
+                                    {this.renderErrors(errors.firstName)}
                                 </Col>
                             </FormGroup>
                             <FormGroup row>
@@ -115,8 +228,11 @@ class Contact extends Component<{}, IContactState> {
                                         name="lastName"
                                         placeholder="Last Name"
                                         value={this.state.lastName}
+                                        onBlur={this.handleBlur('lastName')}
                                         onChange={this.handleInputChange}
+                                        valid={errors.lastName && errors.lastName.length === 0}
                                     />
+                                    {this.renderErrors(errors.lastName)}
                                 </Col>
                             </FormGroup>
 
@@ -129,8 +245,12 @@ class Contact extends Component<{}, IContactState> {
                                         name="telNum"
                                         placeholder="Telephone Number"
                                         value={this.state.telNum}
+                                        onBlur={this.handleBlur('telNum')}
                                         onChange={this.handleInputChange}
+                                        valid={errors.telNum && errors.telNum.length === 0}
                                     />
+                                    {this.renderErrors(errors.telNum)}
+
                                 </Col>
                             </FormGroup>
 
@@ -144,7 +264,10 @@ class Contact extends Component<{}, IContactState> {
                                         placeholder="Email"
                                         value={this.state.email}
                                         onChange={this.handleInputChange}
+                                        onBlur={this.handleBlur('email')}
+                                        valid={errors.email && errors.email.length === 0}
                                     />
+                                    {this.renderErrors(errors.email)}
                                 </Col>
                             </FormGroup>
 
@@ -159,6 +282,8 @@ class Contact extends Component<{}, IContactState> {
                                                 onChange={this.handleInputChange}
                                             />
                                             {' '} <strong>May we contact you?</strong>
+
+
                                         </Label>
 
                                     </FormGroup>
