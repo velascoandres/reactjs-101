@@ -1,37 +1,34 @@
 import React, { Component } from 'react';
-import { DISHES } from '../shared/dishes';
 import Menu from './MenuComponent';
 import { Dish, IComment, ILeader, IPromotion } from '../interfaces/dish.interface';
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
-import { Switch, Route, Redirect } from 'react-router-dom';
+import { Switch, Route, Redirect, withRouter, RouteComponentProps } from 'react-router-dom';
 import Contact from './ContactComponent';
-import { LEADERS } from '../shared/leaders';
-import { PROMOTIONS } from '../shared/promotions';
 import DishDetail from './DishDetailComponent';
-import { COMMENTS } from '../shared/comments';
 import About from './AboutComponent';
+import { connect } from 'react-redux';
+import { IMainState } from '../redux/reducer';
 
 
-interface IMainState {
-  dishes: Dish[];
-  selectedDish: number | string | null;
-  leaders: ILeader[];
-  promotions: IPromotion[];
-  comments: IComment[];
+type MainProps = IMainState & RouteComponentProps<any>;
+
+const mapStateToProps = (state: IMainState): Pick<MainProps, keyof IMainState> => {
+  return {
+    dishes: state.dishes,
+    comments: state.comments,
+    leaders: state.leaders,
+    promotions: state.promotions,
+    selectedDish: state.selectedDish,
+  };
 }
 
-class Main extends Component<{}, IMainState> {
-  constructor(props: Object) {
+
+
+class Main extends Component<MainProps, IMainState> {
+  constructor(props: MainProps) {
     super(props);
-    this.state = {
-      dishes: DISHES,
-      selectedDish: null,
-      leaders: LEADERS,
-      promotions: PROMOTIONS,
-      comments: COMMENTS,
-    };
   }
 
   onDishSelect(dishId: number | string): void {
@@ -41,40 +38,40 @@ class Main extends Component<{}, IMainState> {
   }
 
   get selectedDish(): Dish {
-    const { dishes, selectedDish } = this.state;
+    const { dishes, selectedDish } = this.props;
     return dishes.filter((dish: Dish) => dish.id === selectedDish)[0];
   }
 
   get featuredDish(): Dish {
-    return this.state.dishes.filter(
+    return this.props.dishes.filter(
       (dish: Dish) => dish.featured,
     )[0];
   }
 
   get promotionFeatured(): IPromotion {
-    return this.state.promotions.filter(
+    return this.props.promotions.filter(
       (promotion: IPromotion) => promotion.featured,
     )[0];
   }
 
   get leaderFeatured(): ILeader {
-    return this.state.leaders.filter(
+    return this.props.leaders.filter(
       (leader: ILeader) => leader.featured,
     )[0];
   }
 
 
   getDishById(id: string): Dish {
-    return this.state.dishes.filter(dish => dish.id === parseInt(id, 10))[0];
+    return this.props.dishes.filter(dish => dish.id === parseInt(id, 10))[0];
   }
 
   getCommendsByDishId(dishId: string): IComment[] {
-    return this.state.comments.filter(comment => comment.dishId === parseInt(dishId, 10));
+    return this.props.comments.filter(comment => comment.dishId === parseInt(dishId, 10));
   }
 
 
   render(): JSX.Element {
-    const { dishes, leaders } = this.state;
+    const { dishes, leaders } = this.props;
 
     const HomePage = () => (
       <Home
@@ -108,4 +105,4 @@ class Main extends Component<{}, IMainState> {
   }
 }
 
-export default Main;
+export default withRouter(connect(mapStateToProps)(Main));
