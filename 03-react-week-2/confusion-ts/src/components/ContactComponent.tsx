@@ -4,7 +4,7 @@ import { Link } from 'react-router-dom';
 import { type } from 'os';
 import { IValidationResponse, ValidationTypes, ValidatorFunction, Validators } from '../functions/validate-field';
 import { access } from 'fs';
-import { Control, LocalForm } from 'react-redux-form';
+import { Control, Errors, LocalForm, ValidatorFn } from 'react-redux-form';
 
 
 
@@ -27,6 +27,21 @@ interface IErrors {
     maxLenght?: string;
     required?: string;
 }
+
+
+const required: ValidatorFn = (val: string): boolean => !!(val && val.length);
+const maxLenght: (len: number) => ValidatorFn = (len: number) => (val: string) => typeof val === 'string' && val.length <= len;
+const minLenght: (len: number) => ValidatorFn = (len: number) => (val: string) => typeof val === 'string' && val.length >= len;
+const isNumber: ValidatorFn = (val: string) => !isNaN(Number(val));
+const validEmail: ValidatorFn = (val: string) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
+
+// const Validator = {
+//     required,
+//     maxLenght,
+//     minLenght,
+//     isNumber,
+//     validEmail,
+// }
 
 
 class Contact extends Component<{}, IContactState> {
@@ -211,8 +226,25 @@ class Contact extends Component<{}, IContactState> {
                                         id="firstName"
                                         name="firstName"
                                         placeholder="First Name"
+                                        validators={
+                                            {
+                                                required,
+                                                minLength: minLenght(3),
+                                                maxLenght: maxLenght(15),
+                                            }
+                                        }
                                     />
                                     {/* {this.renderErrors(errors.firstName)} */}
+                                    <Errors
+                                        className="text-danger"
+                                        model=".firstname"
+                                        show="touched"
+                                        messages={{
+                                            required: 'Required',
+                                            minLength: 'Must be greater than 2 characters',
+                                            maxLenght: 'Must be 15 characters or less',
+                                        }}
+                                    />  
                                 </Col>
                             </Row>
                             <Row className="form-group">
@@ -224,6 +256,23 @@ class Contact extends Component<{}, IContactState> {
                                         id="lastName"
                                         name="lastName"
                                         placeholder="Last Name"
+                                        validators={
+                                            {
+                                                required,
+                                                minLength: minLenght(3),
+                                                maxLength: maxLenght(15),
+                                            }
+                                        }
+                                    />
+                                    <Errors
+                                        className="text-danger"
+                                        model=".lastName"
+                                        show="touched"
+                                        messages={{
+                                            required: 'Required',
+                                            minLength: 'Must be greater than 2 numbers',
+                                            maxLength: 'Must be 15 numbers or less',
+                                        }}
                                     />
                                     {/* {this.renderErrors(errors.lastName)} */}
                                 </Col>
@@ -238,6 +287,25 @@ class Contact extends Component<{}, IContactState> {
                                         id="telNum"
                                         name="telNum"
                                         placeholder="Telephone Number"
+                                        validators={
+                                            {
+                                                required,
+                                                minLength: minLenght(3),
+                                                maxLength: maxLenght(15),
+                                                isNumber,
+                                            }
+                                        }
+                                    />
+                                    <Errors
+                                        className="text-danger"
+                                        model=".telNum"
+                                        show="touched"
+                                        messages={{
+                                            required: 'Required',
+                                            minLength: 'Must be greater than 2 numbers',
+                                            maxLength: 'Must be 15 characters or less',
+                                            isNumber: 'Enter only numbers'
+                                        }}
                                     />
                                     {/* {this.renderErrors(errors.telNum)} */}
 
@@ -253,6 +321,21 @@ class Contact extends Component<{}, IContactState> {
                                         id="email"
                                         name="email"
                                         placeholder="Email"
+                                        validators={
+                                            {
+                                                required,
+                                                validEmail,
+                                            }
+                                        }
+                                    />
+                                    <Errors
+                                        className="text-danger"
+                                        model=".email"
+                                        show="touched"
+                                        messages={{
+                                            required: 'Required ',
+                                            validEmail: 'Invalid Email'
+                                        }}
                                     />
                                     {/* {this.renderErrors(errors.email)} */}
                                 </Col>
