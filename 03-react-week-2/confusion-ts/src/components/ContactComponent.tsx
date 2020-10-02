@@ -1,9 +1,6 @@
 import React, { Component } from 'react';
-import { Breadcrumb, BreadcrumbItem, Button, Col, Form, FormGroup, Input, Label, Alert, Row } from 'reactstrap';
+import { Breadcrumb, BreadcrumbItem, Button, Col, FormGroup, Label, Row } from 'reactstrap';
 import { Link } from 'react-router-dom';
-import { type } from 'os';
-import { IValidationResponse, ValidationTypes, ValidatorFunction, Validators } from '../functions/validate-field';
-import { access } from 'fs';
 import { Control, Errors, LocalForm, ValidatorFn } from 'react-redux-form';
 
 
@@ -35,146 +32,20 @@ const minLenght: (len: number) => ValidatorFn = (len: number) => (val: string) =
 const isNumber: ValidatorFn = (val: string) => !isNaN(Number(val));
 const validEmail: ValidatorFn = (val: string) => /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,4}$/i.test(val);
 
-// const Validator = {
-//     required,
-//     maxLenght,
-//     minLenght,
-//     isNumber,
-//     validEmail,
-// }
-
 
 class Contact extends Component<{}, IContactState> {
 
-    errors: Record<keyof IContactForm, IErrors> = {
-        firstName: {
-            minLenght: 'First Name should be >>= 3 characters',
-        },
-        lastName: {
-            minLenght: 'Last Name should be >>= 3 characters',
-        },
-        contactType: {
-            required: '',
-        },
-        email: {
-            required: 'The email is mandatory',
-        },
-        agree: {
-            required: '',
-        },
-        message: {
-            required: '',
-        },
-        telNum: {
-            required: '',
-            maxLenght: 'Tel. Num should be <= 10 characters',
-            minLenght: 'Tel. Num should be >>= 3 characters',
-        }
-    }
-
-    errorMessages: Record<keyof IContactForm, string[]> = {
-        firstName: [],
-        lastName: [],
-        telNum: [],
-        email: [],
-        agree: [],
-        contactType: [],
-        message: [],
-    }
-
-
     constructor(props: any) {
         super(props);
-        this.state = {
-            firstName: '',
-            lastName: '',
-            telNum: '',
-            email: '',
-            agree: false,
-            contactType: 'Tel.',
-            message: '',
-            touched: {
-                firstName: false,
-                lastName: false,
-                telNum: false,
-                email: false,
-                agree: false,
-                contactType: false,
-                message: false,
-            }
-        };
         this.handleSubmit = this.handleSubmit.bind(this);
-        // this.handleInputChange = this.handleInputChange.bind(this);
-        //  this.handleBlur = this.handleBlur.bind(this);
     }
 
-    // handleBlur(field: string) {
-    //     return (event: any) => {
-    //         this.setState(
-    //             {
-    //                 touched: {
-    //                     ...this.state.touched,
-    //                     [field]: true,
-    //                 },
-    //             },
-    //         );
-    //     };
-    // }
-
-
-    validate(fieldName: keyof IContactForm, value: string, validatorFunctions: ValidatorFunction[]): string[] | undefined {
-        console.log(this.state.touched[fieldName]);
-        if (this.state.touched[fieldName]) {
-            const fieldErrros: Partial<Record<ValidationTypes, string>> = this.errors[fieldName];
-            return validatorFunctions.reduce(
-                (acc: string[], func: ValidatorFunction) => {
-                    const validaationResponse = func(value);
-                    console.log(validaationResponse);
-                    if (validaationResponse) {
-                        const errorName = Object.keys(validaationResponse)[0] as ValidationTypes;
-                        acc.push(fieldErrros[errorName] as string);
-                    }
-                    return acc;
-                }, []
-            );
-        }
-    }
-
-    // handleInputChange(event: any) {
-    //     const target = event.target;
-    //     const value = target.type === 'checkbox' ? target.checked : target.value;
-    //     const name = target.name as keyof IContactState;
-    //     const partialState: any = {
-    //         [name]: value,
-    //     };
-    //     this.setState(
-    //         partialState,
-    //     );
-    // }
 
     handleSubmit(event: any) {
         alert('Current state is ' + JSON.stringify(event));
     }
 
-    renderErrors(errors: string[] | undefined) {
-        if (errors && errors.length > 0) {
-            return (
-                <Alert color="danger">
-                    {errors.map((err, index) => <span key={index + err}>{err}</span>)}
-                </Alert>
-            )
-        } else {
-            return (<div></div>)
-        }
-    }
-
     render() {
-        // const errors: Partial<Record<keyof IContactForm, string[] | undefined>> = {
-        //     firstName: this.validate('firstName', this.state.firstName, [Validators.minLength(3)]),
-        //     lastName: this.validate('lastName', this.state.lastName, [Validators.minLength(3)]),
-        //     email: this.validate('email', this.state.email, [Validators.required]),
-        //     telNum: this.validate('telNum', this.state.telNum, [Validators.maxLength(10), Validators.minLength(3)]),
-        // };
         return (
             <div className="container">
                 <Breadcrumb>
@@ -234,7 +105,6 @@ class Contact extends Component<{}, IContactState> {
                                             }
                                         }
                                     />
-                                    {/* {this.renderErrors(errors.firstName)} */}
                                     <Errors
                                         className="text-danger"
                                         model=".firstname"
@@ -244,7 +114,7 @@ class Contact extends Component<{}, IContactState> {
                                             minLength: 'Must be greater than 2 characters',
                                             maxLenght: 'Must be 15 characters or less',
                                         }}
-                                    />  
+                                    />
                                 </Col>
                             </Row>
                             <Row className="form-group">
@@ -274,7 +144,6 @@ class Contact extends Component<{}, IContactState> {
                                             maxLength: 'Must be 15 numbers or less',
                                         }}
                                     />
-                                    {/* {this.renderErrors(errors.lastName)} */}
                                 </Col>
                             </Row>
 
@@ -307,7 +176,6 @@ class Contact extends Component<{}, IContactState> {
                                             isNumber: 'Enter only numbers'
                                         }}
                                     />
-                                    {/* {this.renderErrors(errors.telNum)} */}
 
                                 </Col>
                             </Row>
@@ -337,7 +205,6 @@ class Contact extends Component<{}, IContactState> {
                                             validEmail: 'Invalid Email'
                                         }}
                                     />
-                                    {/* {this.renderErrors(errors.email)} */}
                                 </Col>
                             </Row>
 
