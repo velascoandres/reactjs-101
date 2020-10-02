@@ -4,7 +4,7 @@ import { Dish, IComment, ILeader, IPromotion } from '../interfaces/dish.interfac
 import Header from './HeaderComponent';
 import Footer from './FooterComponent';
 import Home from './HomeComponent';
-import { Switch, Route, Redirect, withRouter, RouteComponentProps } from 'react-router-dom';
+import { Switch, Route, withRouter, RouteComponentProps } from 'react-router-dom';
 import Contact from './ContactComponent';
 import DishDetail from './DishDetailComponent';
 import About from './AboutComponent';
@@ -27,9 +27,6 @@ const mapStateToProps = (state: IMainState): Pick<MainProps, keyof IMainState> =
 
 
 class Main extends Component<MainProps, IMainState> {
-  constructor(props: MainProps) {
-    super(props);
-  }
 
   onDishSelect(dishId: number | string): void {
     this.setState({

@@ -3,7 +3,6 @@ import { LEADERS } from '../shared/leaders';
 import { PROMOTIONS } from '../shared/promotions';
 import { COMMENTS } from '../shared/comments';
 import { Dish, ILeader, IPromotion, IComment } from '../interfaces/dish.interface';
-import { RouteComponentProps } from 'react-router-dom';
 
 
 export interface IMainState {
