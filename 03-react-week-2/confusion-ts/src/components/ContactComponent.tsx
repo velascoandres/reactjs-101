@@ -208,7 +208,6 @@ class Contact extends Component<{}, IContactState> {
                                     <Control.text
                                         model=".firstname"
                                         className="form-control"
-                                        type="text"
                                         id="firstName"
                                         name="firstName"
                                         placeholder="First Name"
@@ -220,7 +219,6 @@ class Contact extends Component<{}, IContactState> {
                                 <Label htmlFor="lastName" md={2}>Last Name</Label>
                                 <Col md={10}>
                                     <Control.text
-                                        type="text"
                                         model=".lastName"
                                         className="form-control"
                                         id="lastName"
@@ -237,7 +235,6 @@ class Contact extends Component<{}, IContactState> {
                                     <Control.text
                                         model=".telNum"
                                         className="form-control"
-                                        type="tel"
                                         id="telNum"
                                         name="telNum"
                                         placeholder="Telephone Number"
@@ -253,7 +250,6 @@ class Contact extends Component<{}, IContactState> {
                                     <Control.text
                                         model=".email"
                                         className="form-control"
-                                        type="email"
                                         id="email"
                                         name="email"
                                         placeholder="Email"
@@ -282,7 +278,6 @@ class Contact extends Component<{}, IContactState> {
                                 <Col md={{ size: 3, offset: 1 }}>
                                     <Control.select
                                         model=".contactType"
-                                        type="select"
                                         name="contactType"
                                         className="form-control"
                                     >
@@ -297,7 +292,6 @@ class Contact extends Component<{}, IContactState> {
                                 <Col md={10}>
                                     <Control.textarea
                                         model=".message"
-                                        type="textarea"
                                         id="message"
                                         name="message"
                                         className="form-control"
